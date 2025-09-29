@@ -1,9 +1,14 @@
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+// Добавляем сервисы Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 var app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
 var http = new HttpClient();
-app.Urls.Add("http://*:5000");
+
 var departments = new List<Department>();
 
 // список кафедр
@@ -21,7 +26,7 @@ app.MapGet("/departments/{id:guid}", async (Guid id) =>
 		try
 		{
 			faculty = await http.GetFromJsonAsync<FacultyDto>(
-				"http://faculty:5000/faculties/{dep.FacultyUuid}"
+				 $"http://faculty:8080/faculties/{dep.FacultyUuid}"
 				);
 		}
 		catch { }
